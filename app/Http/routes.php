@@ -15,4 +15,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('email', 'EmailController');
+Route::auth();
+
+Route::get('/home', 'HomeController@index');
