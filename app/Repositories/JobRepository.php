@@ -7,6 +7,7 @@ use Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use App\Library\General;
+use App\Library\SendEmail;
 
 use App\Models\Job;
 use App\Models\User;
@@ -70,6 +71,7 @@ class JobRepository {
                 ];
                 Skill::create($skills);
             }
+            SendEmail::sendEmailOnJobCreation($user, $linkId, $jobId);
             return true;
         }
         catch(ModelNotFoundException $ex) {
