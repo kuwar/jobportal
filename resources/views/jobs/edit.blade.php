@@ -21,6 +21,13 @@
                                     <li class="active">Edit</li>
                                 </ol>
                             </div>
+                            <!--Adding quick link-->
+                            <div class="col-md-6 pull-right">
+                                <a href="{{url('/job')}}" class="btn btn-success btn-sm">List Jobs</a>
+                                &nbsp;
+                                <a href="{{ url('/job/create') }}"
+                                   class="btn btn-primary btn-sm">Create Job</a>
+                            </div>
                         </div>
                     </div>
 
