@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('title')
+- View Job
+@endsection
+
 @section('content')
 
     <div class="container">
@@ -9,12 +13,12 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <div class="row">
-                            <div class="col md-6">
+                            <div class="col-md-6">
                                 <!--Breadcrumb-->
                                 <ol class="breadcrumb">
                                     <li><a href="{{url('/')}}">Home</a></li>
                                     <li><a href="{{url('/job')}}">Job</a></li>
-                                    <li class="active">View</li>
+                                    <li class="active">Create Job</li>
                                 </ol>
                             </div>
                             <!--Adding quick link-->
@@ -31,19 +35,27 @@
                         <table>
                             <tr>
                                 <th>Posted By</th>
-                                <td>{{$item->email}}</td>
+                                <td>{{ $item->user->email }}</td>
                             </tr>
                             <tr>
                                 <th>Job Title</th>
-                                <td>{{$item->title}}</td>
+                                <td>{{ $item->title }}</td>
                             </tr>
                             <tr>
                                 <th>Description</th>
-                                <td>{{$item->description}}</td>
+                                <td>{{ $item->description }}</td>
                             </tr>
                             <tr>
                                 <th>Skills</th>
-                                <td>{{$item->skills}}</td>
+                                <td>
+                                    @if ($item->skills)
+                                    <ol>
+                                    @foreach ($item->skills as $skill)
+                                        <li>{{ $skill->title }}</li>
+                                    @endforeach
+                                    </ol>
+                                    @endif
+                                </td>
                             </tr>
                         </table>
                     </div>

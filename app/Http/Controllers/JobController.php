@@ -72,9 +72,9 @@ class JobController extends Controller
      */
     public function show($id)
     {
-        //
-        $contact = '';
-        return view('jobs.view')->with(['item' => $contact]);
+        $job = $this->jobRepo->getJob($id);
+        
+        return view('jobs.view')->with(['item' => $job]);
     }
 
     /**
