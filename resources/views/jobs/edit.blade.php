@@ -31,7 +31,7 @@
                             {!! Form::label('email', 'Email*', array('class' => 'col-md-4 control-label')) !!}
 
                             <div class="col-md-6">
-                                {!! Form::text('email', old('email'), ['class' => 'form-control', 'id' => 'email']) !!}
+                                {!! Form::text('user[email]', old('email'), ['class' => 'form-control', 'id' => 'email']) !!}
 
                                 @if ($errors->has('email'))
                                     <span class="help-block">
@@ -59,7 +59,7 @@
                             {!! Form::label('description', 'Description*', array('class' => 'col-md-4 control-label')) !!}
 
                             <div class="col-md-6">
-                                {!! Form::text('description', old('description'), ['class' => 'form-control', 'id' => 'description']) !!}
+                                {!! Form::textarea('description', old('description'), ['class' => 'form-control', 'id' => 'description']) !!}
 
                                 @if ($errors->has('description'))
                                     <span class="help-block">
@@ -69,6 +69,7 @@
                             </div>
                         </div>
 
+                        
                         <div class="form-group{{ $errors->has('skills') ? ' has-error' : '' }}">
                             {!! Form::label('skills', 'Skills*', array('class' => 'col-md-4 control-label')) !!}
 
@@ -81,8 +82,25 @@
                                     </span>
                                 @endif
                             </div>
-                        </div>
 
+                            <!--displaying old skills-->
+                            @if ($item->skills)
+                                @foreach ($item->skills as $skill)
+                                    <div class="col-md-6 col-md-offset-4">
+                                        {!! Form::text('skills', old('skills'), ['class' => 'form-control', 'id' => 'skills']) !!}
+
+                                        @if ($errors->has('skills'))
+                                            <span class="help-block">
+                                                <strong>{{ $errors->first('skills') }}</strong>
+                                            </span>
+                                        @endif
+                                    </div>
+                                @endforeach
+                            @endif
+                            <!--/-->
+                            
+                        </div>
+                        
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 <button type="submit" class="btn btn-primary">

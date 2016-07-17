@@ -62,8 +62,7 @@
                                 <label for="description" class="col-md-4 control-label">Description<span class="required-indicator">*</span></label>
 
                                 <div class="col-md-6">
-                                    <input id="description" type="text" class="form-control" name="description"
-                                           value="{{ old('description') }}">
+                                    <textarea id="description" class="form-control" name="description">{{ old('description') }}</textarea>
 
                                     @if ($errors->has('description'))
                                         <span class="help-block">
@@ -73,18 +72,15 @@
                                 </div>
                             </div>
 
-                            <div class="form-group{{ $errors->has('skills') ? ' has-error' : '' }}">
+                            <div class="form-group" id="skillsWrapper">
                                 <label for="skills" class="col-md-4 control-label">Skills<span class="required-indicator">*</span></label>
-
-                                <div class="col-md-6">
-                                    <input id="skills" type="text" class="form-control" name="skills"
-                                           value="{{ old('skills') }}">
-
-                                    @if ($errors->has('skills'))
-                                        <span class="help-block">
-                                        <strong>{{ $errors->first('skills') }}</strong>
-                                    </span>
-                                    @endif
+                                <div class="singleSkillWrapper">
+                                    <div class="col-md-5">
+                                        <input type="text" class="form-control" name="skills[]">
+                                    </div>
+                                    <button type="button" class="col-md-1 addMoreSkill" id="addMoreSkill">
+                                        <span class="glyphicon glyphicon-plus">Add</span>
+                                    </button>
                                 </div>
                             </div>
 
@@ -101,4 +97,34 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('custom_script')
+    <script>
+        $(document).ready(function () {
+            var skillInputToAppend = '<div class="singleSkillWrapper">'+
+                                    '<div class="col-md-5 col-md-offset-4">'+
+                                    '<input type="text" class="form-control" name="skills[]">'+
+                                    '</div>'+
+                                    '<button type="button" class="col-md-1 removeSkills">'+
+                                    '<span class="glyphicon glyphicon-minus">Remove</span>'+
+                                    '</button></div>';
+
+            var skillWrapper = $("#skillsWrapper");
+
+            // Add skills input field
+            $("#addMoreSkill").on('click', function (evt) {
+                evt.preventDefault();
+
+                $(skillsWrapper).append(skillInputToAppend);
+            });
+
+            // Remove skill input field
+            $(skillWrapper).on("click",".removeSkills", function(evt){
+                evt.preventDefault();
+
+                $(this).parent('div').remove();
+            });
+        });
+    </script>
 @endsection

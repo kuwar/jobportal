@@ -34,6 +34,8 @@
 <body id="app-layout">
     @include('partials.header')
 
+    @include('errors.alerts')
+
     @yield('content')
 
     <!-- JavaScripts -->

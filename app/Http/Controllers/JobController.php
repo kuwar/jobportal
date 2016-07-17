@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Session;
 
 use App\Repositories\JobRepository;
+use App\Http\Requests\JobRequest;
 
 class JobController extends Controller
 {
@@ -48,28 +50,18 @@ class JobController extends Controller
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ContactRequest $request)
+    public function store(JobRequest $request)
     {
-        // Get all inputs
-        /*$input = $request->all();
-
-        $contactId = Contact::insertGetId([
-            'user_id' => Auth::id(),
-            'first_name' => $input['first_name'],
-            'last_name' => $input['last_name'],
-            'phone' => $input['phone'],
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
-        ]);
-        // Insert group
-        if ($request->has('group_id')) {
-            ContactGroup::create([
-               'group_id' => $input['group_id'],
-               'contact_id' => $contactId
-            ]);
+        $jobInsertStatus = $this->jobRepo->insertNewJob();
+        
+        if ($jobInsertStatus) {
+            Session::flash('success', "New job created successfully.");
         }
-        Session::flash('success', config('constant.SUCCESS_CREATE'));
-        return redirect('/user/contact');*/
+        else {
+            Session::flash('error', "Sorry! error occured");
+        }
+        
+        return redirect('/job');
     }
 
     /**
