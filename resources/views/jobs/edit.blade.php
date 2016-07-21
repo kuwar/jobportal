@@ -80,32 +80,33 @@
                         <div class="form-group{{ $errors->has('skills') ? ' has-error' : '' }}">
                             {!! Form::label('skills', 'Skills*', array('class' => 'col-md-4 control-label')) !!}
 
-                            <div class="col-md-6">
-                                {!! Form::text('skills', old('skills'), ['class' => 'form-control', 'id' => 'skills']) !!}
-
-                                @if ($errors->has('skills'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('skills') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-
                             <!--displaying old skills-->
                             @if ($item->skills)
                                 @foreach ($item->skills as $skill)
-                                    <div class="col-md-6 col-md-offset-4">
-                                        {!! Form::text('skills', old('skills'), ['class' => 'form-control', 'id' => 'skills']) !!}
-
-                                        @if ($errors->has('skills'))
-                                            <span class="help-block">
-                                                <strong>{{ $errors->first('skills') }}</strong>
-                                            </span>
-                                        @endif
+                                    <div class="oldSingleSkillWrapper">
+                                        <div class="col-md-5 col-md-offset-4">
+                                            <input type="text" class="form-control" value="{{ $skill->title }}">
+                                        </div>
+                                        <button type="button" class="col-md-1 deleteSkillFromDb" data-id="{{ $skill->id }}">
+                                            <span class="glyphicon glyphicon-trash">Delete</span>
+                                        </button>
                                     </div>
                                 @endforeach
                             @endif
                             <!--/-->
                             
+                        </div>
+
+                        <div class="form-group" id="skillsWrapper">
+                            <div class="singleSkillWrapper">
+                                <div class="col-md-5 col-md-offset-4">
+                                    <input type="text" class="form-control" name="skills[]">
+                                </div>
+                                <button type="button" class="col-md-1 addMoreSkill" id="addMoreSkill">
+                                    <span class="glyphicon glyphicon-plus">Add</span>
+                                </button>
+                            </div>
+
                         </div>
                         
                         <div class="form-group">
@@ -131,7 +132,55 @@
 @section('custom_script')
     <script>
         $(document).ready(function () {
-            
+            var skillInputToAppend = '<div class="singleSkillWrapper">'+
+                                    '<div class="col-md-5 col-md-offset-4">'+
+                                    '<input type="text" class="form-control" name="skills[]">'+
+                                    '</div>'+
+                                    '<button type="button" class="col-md-1 removeSkills">'+
+                                    '<span class="glyphicon glyphicon-minus">Remove</span>'+
+                                    '</button></div>';
+
+            var skillWrapper = $("#skillsWrapper");
+
+            // Add skills input field
+            $("#addMoreSkill").on('click', function (evt) {
+                evt.preventDefault();
+
+                $(skillsWrapper).append(skillInputToAppend);
+            });
+
+            // Remove skill input field
+            $(skillWrapper).on("click",".removeSkills", function(evt){
+                evt.preventDefault();
+
+                $(this).parent('div').remove();
+            });
+
+            // Deleting skills from db
+            $(".deleteSkillFromDb").on("click", function (evt) {
+                var skillId = $(this).data('id');
+
+                //confirm to delete
+                if (confirm("Are you sure to delete this skill")) {
+                    
+                    $.ajax({
+                        method: "POST",
+                        url: js_base_url + "/jobs/delete-skill",
+                        data: {skill_id: skillId}
+                    })
+                    .done(function (response) {
+                        if (response.error == false) {
+                            //Remove deleted div
+                            $(this).parent('div').remove();
+                        }
+                        else {
+                            alert(response.message);
+                        }
+                    });
+                }                
+            });
         });
     </script>
 @endsection
+
+

@@ -73,7 +73,7 @@ class JobController extends Controller
     public function show($id)
     {
         $job = $this->jobRepo->getJob($id);
-        
+
         return view('jobs.view')->with(['item' => $job]);
     }
 
@@ -99,21 +99,17 @@ class JobController extends Controller
      */
     public function update(ContactRequest $request, $id)
     {
-        /*$input = $request->all();
-        try {
-            Contact::where('id', $id)
-                ->where('user_id', Auth::id())
-                ->update([
-                    'first_name' => $input['first_name'],
-                    'last_name' => $input['last_name'],
-                    'phone' => $input['phone'],
-                ]);
-            Session::flash('success', config('constant.SUCCESS_UPDATE'));
-            return redirect('/user/contact');
-        } catch (ModelNotFoundException $ex) {
-            Session::flash('warning', config('constant.EXCEPTION_MODEL_NOT_FOUND'));
+        $jobUpdateStatus = $this->jobRepo->updateJob();
+
+        if ($jobUpdateStatus) {
+            Session::flash('success', "Successfully updated job");
+            return redirect('/job');
+        }
+        else {
+            Session::flash('warning', "Something went wrong while updating job");
             return redirect()->back();
-        }*/
+        }
+        
     }
 
     /**
@@ -124,13 +120,22 @@ class JobController extends Controller
      */
     public function destroy($id)
     {
-        /*try {
-            $contact = Contact::where('user_id', Auth::id())->findOrFail($id);
-            $contact->delete();
-            Session::flash('success', 'Successfully deleted contact');
-        } catch (ModelNotFoundException $e) {
-            Session::flash('warning', config('constant.EXCEPTION_MODEL_NOT_FOUND'));
+        $jobDeleteStatus = $this->jobRepo->deleteJob($id);
+
+        if ($jobDeleteStatus) {
+            Session::flash('success', 'Successfully deleted job');
         }
-        return redirect()->back();*/
+        else {
+            Session::flash('warning', "Sorry! Error occured");
+        }
+        return redirect()->back();
+    }
+
+    /**
+     * Delete job's skill
+     */
+    public function deleteSkill() {
+        $jobSkillDeleteData = $this->jobRepo->deleteJobSkill();
+        return $jobSkillDeleteData;
     }
 }

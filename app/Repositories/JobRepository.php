@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use App\Library\General;
 use App\Library\SendEmail;
+use App\Library\AjaxResponse;
 
 use App\Models\Job;
 use App\Models\User;
@@ -79,9 +80,68 @@ class JobRepository {
         }
         catch(Exception $ex) {
             return false;
+        }        
+    }
+
+    /**
+     * Update job
+     */
+    public function updateJob() {
+        $input = $this->request->all();
+
+        try {
+            //updating user email
+            User::where('id', $input['user_id'])
+                ->update([
+                    'email' => $input['email'],
+                ]); 
+            //updating job
+            Job::where('id', $input['job_id'])
+                ->update([
+                    'title' => $input['title'],
+                    'description' => $input['description'],
+                ]);
+            //updating skills
+        } 
+        catch (ModelNotFoundException $ex) {
+            return false;
         }
-        
-        
+    }
+
+    /**
+     * Delete job skill
+     */
+    public function deleteJob($id){
+
+        try {
+            $job = Job::findOrFail($id);
+            
+            if ($job->delete()) {
+                return true;
+            }
+            return false;
+        } catch (ModelNotFoundException $e) {
+            return false;
+        }     
+    }
+
+    /**
+     * Delete job skill
+     */
+    public function deleteJobSkill(){
+        $input = $this->request->all();
+
+        try {
+            $skill = Skill::findOrFail($input['skill_id']);
+
+            if ($skill->delete()) {
+                return AjaxResponse::sendResponse("Successfully deleted skill", false, 200);
+            }
+
+            return AjaxResponse::sendResponse("Sorry! Error occured", true, 200);
+        } catch (ModelNotFoundException $e) {
+            return AjaxResponse::sendResponse("Sorry! Error occured", true, 200);
+        }        
     }
 
 }
