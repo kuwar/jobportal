@@ -74,40 +74,7 @@
                                     </span>
                                 @endif
                             </div>
-                        </div>
-
-                        
-                        <div class="form-group{{ $errors->has('skills') ? ' has-error' : '' }}">
-                            {!! Form::label('skills', 'Skills*', array('class' => 'col-md-4 control-label')) !!}
-
-                            <!--displaying old skills-->
-                            @if ($item->skills)
-                                @foreach ($item->skills as $skill)
-                                    <div class="oldSingleSkillWrapper">
-                                        <div class="col-md-5 col-md-offset-4">
-                                            <input type="text" class="form-control" value="{{ $skill->title }}">
-                                        </div>
-                                        <button type="button" class="col-md-1 deleteSkillFromDb" data-id="{{ $skill->id }}">
-                                            <span class="glyphicon glyphicon-trash">Delete</span>
-                                        </button>
-                                    </div>
-                                @endforeach
-                            @endif
-                            <!--/-->
-                            
-                        </div>
-
-                        <div class="form-group" id="skillsWrapper">
-                            <div class="singleSkillWrapper">
-                                <div class="col-md-5 col-md-offset-4">
-                                    <input type="text" class="form-control" name="skills[]">
-                                </div>
-                                <button type="button" class="col-md-1 addMoreSkill" id="addMoreSkill">
-                                    <span class="glyphicon glyphicon-plus">Add</span>
-                                </button>
-                            </div>
-
-                        </div>
+                        </div>                        
                         
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
@@ -117,11 +84,81 @@
                             </div>
                         </div>
                         {!! Form::close() !!}
+                        <hr>
+                        <!--Skills Table-->
+                        <!-- <div class="row"> -->
+                            <div class="col-md-2 col-md-offset-10">
+                                <a href="#" class="btn btn-primary btn-sm" id="addSkillBtn">Add Skill</a>
+                            </div>
+                            <div class="clearfix"></div> 
+                            <table class="table table-striped table-bordered table-hover no-footer"
+                                   id="dataTables" role="grid">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Skills</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @if ($item->skills)
+                                    @foreach($item->skills as $item)
+                                        <tr>
+                                            <td>{{$item->id}}</td>
+                                            <td>{{$item->title}}</td>
+                                            <td>
+                                                <a href="{{route('job.edit', $item->id)}}">
+                                                    <span class="glyphicon glyphicon-pencil"></span>
+                                                </a>
+                                                &nbsp;&nbsp;
+                                                <button type="button" class="deleteSkillFromDb" data-id="{{$item->id}}"><span class="glyphicon glyphicon-remove"></span></button>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @endif
+                                </tbody>
+                            </table>
+                        <!-- </div> -->
+                        <!--/-->                        
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Popup modal to add skill -->
+    <div class="modal fade" id="skillAddModal" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <form class="form-horizontal" role="form" method="POST" action="{{ url('/') }}">
+                {{ csrf_field() }}
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Add Skills</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="skills" class="col-md-4 control-label">Skill</label>
+
+                            <div class="col-md-6">
+                                <input type="text" class="form-control skills" name="skills[]">
+
+                                <span class="help-block">
+                                    <strong></strong>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">                        
+                        <button class="btn btn-default" type="submit" id="addNewSkills">Add!</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!--/Popup modal -->
     @endsection
 
             <!--Loading page specific css-->
@@ -132,30 +169,11 @@
 @section('custom_script')
     <script>
         $(document).ready(function () {
-            var skillInputToAppend = '<div class="singleSkillWrapper">'+
-                                    '<div class="col-md-5 col-md-offset-4">'+
-                                    '<input type="text" class="form-control" name="skills[]">'+
-                                    '</div>'+
-                                    '<button type="button" class="col-md-1 removeSkills">'+
-                                    '<span class="glyphicon glyphicon-minus">Remove</span>'+
-                                    '</button></div>';
 
-            var skillWrapper = $("#skillsWrapper");
-
-            // Add skills input field
-            $("#addMoreSkill").on('click', function (evt) {
-                evt.preventDefault();
-
-                $(skillsWrapper).append(skillInputToAppend);
-            });
-
-            // Remove skill input field
-            $(skillWrapper).on("click",".removeSkills", function(evt){
-                evt.preventDefault();
-
-                $(this).parent('div').remove();
-            });
-
+            $("#addSkillBtn").on("click", function () {
+                $('#skillAddModal').modal('show');
+            });            
+           
             // Deleting skills from db
             $(".deleteSkillFromDb").on("click", function (evt) {
                 var skillId = $(this).data('id');
@@ -171,7 +189,7 @@
                     .done(function (response) {
                         if (response.error == false) {
                             //Remove deleted div
-                            $(this).parent('div').remove();
+                            $(this).parent('tr').remove();
                         }
                         else {
                             alert(response.message);
