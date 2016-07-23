@@ -138,15 +138,15 @@
                         <h4 class="modal-title">Add Skills</h4>
                     </div>
                     <div class="modal-body">
-                        <div class="form-group">
-                            <label for="skills" class="col-md-4 control-label">Skill</label>
-
-                            <div class="col-md-6">
-                                <input type="text" class="form-control skills" name="skills[]">
-
-                                <span class="help-block">
-                                    <strong></strong>
-                                </span>
+                        <div class="form-group" id="skillsWrapper">
+                            <label for="skills" class="col-md-3 control-label">Skills</label>
+                            <div class="singleSkillWrapper">
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control" name="skills[]">
+                                </div>
+                                <button type="button" class="col-md-2 addMoreSkill" id="addMoreSkill">
+                                    <span class="glyphicon glyphicon-plus">Add</span>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -172,7 +172,31 @@
 
             $("#addSkillBtn").on("click", function () {
                 $('#skillAddModal').modal('show');
-            });            
+            });   
+
+            var skillInputToAppend = '<div class="singleSkillWrapper">'+
+                                    '<div class="col-md-5 col-md-offset-3">'+
+                                    '<input type="text" class="form-control" name="skills[]">'+
+                                    '</div>'+
+                                    '<button type="button" class="col-md-2 removeSkills">'+
+                                    '<span class="glyphicon glyphicon-minus">Remove</span>'+
+                                    '</button></div>';
+
+            var skillWrapper = $("#skillsWrapper");
+
+            // Add skills input field
+            $("#addMoreSkill").on('click', function (evt) {
+                evt.preventDefault();
+
+                $(skillsWrapper).append(skillInputToAppend);
+            });
+
+            // Remove skill input field
+            $(skillWrapper).on("click",".removeSkills", function(evt){
+                evt.preventDefault();
+
+                $(this).parent('div').remove();
+            });         
            
             // Deleting skills from db
             $(".deleteSkillFromDb").on("click", function (evt) {
@@ -189,7 +213,9 @@
                     .done(function (response) {
                         if (response.error == false) {
                             //Remove deleted div
-                            $(this).parent('tr').remove();
+                            alert("Hello world");
+                            console.log($(this));
+                            $(this).parent().parent().remove();
                         }
                         else {
                             alert(response.message);
