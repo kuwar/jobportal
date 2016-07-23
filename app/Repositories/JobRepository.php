@@ -139,6 +139,25 @@ class JobRepository {
         }     
     }
 
+    /** 
+     * Add job's skills
+     */
+    public function addSkills(){
+        $input = $this->request->all();
+
+        // Retrive skills from array and add
+        for ($i = 0; $i < count($input['skills']); $i++) {
+            $skills = [
+                'job_id' => $input['job_id'],
+                'title' => $input['skills'][$i]
+            ];
+            Skill::create($skills);
+        }
+
+        return true;
+
+    }
+
     /**
      * Delete job skill
      */
@@ -157,5 +176,7 @@ class JobRepository {
             return AjaxResponse::sendResponse("Sorry! Error occured", true, 200);
         }        
     }
+
+    /**/
 
 }

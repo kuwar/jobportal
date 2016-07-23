@@ -20,5 +20,6 @@ Route::auth();
 Route::get('/home', 'HomeController@index');
 
 #Job resource controller
-Route::post('/jobs/delete-skill', 'JobController@deleteSkill');
+Route::post('/job/delete-skill', 'JobController@deleteSkill');
+Route::post('/job/add-skills', 'JobController@addSkills');
 Route::resource('/job', 'JobController');

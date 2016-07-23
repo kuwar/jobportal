@@ -116,8 +116,9 @@
     <div class="modal fade" id="skillAddModal" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
-            <form class="form-horizontal" role="form" method="POST" action="{{ url('/') }}">
+            <form class="form-horizontal" id="addSkillsForm" role="form" method="POST" action="{{ url('/job/add-skills') }}">
                 {{ csrf_field() }}
+                <input type="hidden" name="job_id" value="{{$job_id}}">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -128,7 +129,7 @@
                             <label for="skills" class="col-md-3 control-label">Skills</label>
                             <div class="singleSkillWrapper">
                                 <div class="col-md-5">
-                                    <input type="text" class="form-control" name="skills[]">
+                                    <input type="text" class="form-control required" name="skills[]">
                                 </div>
                                 <button type="button" class="col-md-2 addMoreSkill" id="addMoreSkill">
                                     <span class="glyphicon glyphicon-plus">Add</span>
@@ -182,7 +183,27 @@
                 evt.preventDefault();
 
                 $(this).parent('div').remove();
-            });         
+            });  
+
+            // checking if add input skills is empty or not
+            $("#addSkillsForm").submit(function(){
+                var error = false;           
+                $(this).find('input').each(function(i, input){
+                    var $input = $(input);                    
+                    $input.parent().addClass($input.val() ? '' : 'has-error');
+                    if (! $input.val()) {
+                        error = true;
+                    }                    
+                });
+                if (error) {
+                    return false;
+                }                
+            });
+
+            // Removing error class from input
+            $('#addSkillsForm').on('keyup', 'input', function() {
+                $(this).parent().removeClass('has-error');
+            });
            
             // Deleting skills from db
             $(".deleteSkillFromDb").on("click", function (evt) {
@@ -193,13 +214,13 @@
                     
                     $.ajax({
                         method: "POST",
-                        url: js_base_url + "/jobs/delete-skill",
+                        url: js_base_url + "/job/delete-skill",
                         data: {skill_id: skillId}
                     })
                     .done(function (response) {
                         if (response.error == false) {
                             //Remove deleted div
-                            alert("Hello world");
+                            alert(response.message);
                             console.log($(this));
                             $(this).parent().parent().remove();
                         }

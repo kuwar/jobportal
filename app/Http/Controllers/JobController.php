@@ -87,7 +87,8 @@ class JobController extends Controller
     {
 
         $job = $this->jobRepo->getJob($id);
-        return view('jobs.edit')->with(['item' => $job]);
+        $job_id = $id;
+        return view('jobs.edit')->with(['item' => $job, 'job_id' => $job_id]);
     }
 
     /**
@@ -138,5 +139,20 @@ class JobController extends Controller
     public function deleteSkill() {
         $jobSkillDeleteData = $this->jobRepo->deleteJobSkill();
         return $jobSkillDeleteData;
+    }
+
+    /**
+     * Add job's skills
+     */
+    public function addSkills(Request $request) {
+        $skillAddStatus = $this->jobRepo->addSkills();
+
+        if ($skillAddStatus) {
+            Session::flash('success', 'Successfully added job\'s skills');
+        }
+        else {
+            Session::flash('warning', "Sorry! Error occured");
+        }
+        return redirect()->back();
     }
 }
