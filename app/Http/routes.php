@@ -22,4 +22,5 @@ Route::get('/home', 'HomeController@index');
 #Job resource controller
 Route::post('/job/delete-skill', 'JobController@deleteSkill');
 Route::post('/job/add-skills', 'JobController@addSkills');
+Route::post('/job/verify-job-link-id', 'JobController@verifyJobLinkId');
 Route::resource('/job', 'JobController');

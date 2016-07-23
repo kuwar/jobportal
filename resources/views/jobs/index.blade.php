@@ -58,7 +58,7 @@
                                         <td>{{$item->title}}</td>
                                         <td>{{str_limit($item->description, 100)}}</td>
                                         <td>
-                                            <a href="{{route('job.edit', $item->id)}}">
+                                            <a href="{{route('job.edit', $item->id)}}" data-id="{{$item->id}}" class="verifyJobLinkId">
                                                 <span class="glyphicon glyphicon-pencil"></span>
                                             </a>
                                             &nbsp;&nbsp;
@@ -86,6 +86,34 @@
             </div>
         </div>
     </div>
+
+    <!-- Popup modal to verify link id-->
+    <div class="modal fade" id="verifyLinkId" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <form class="form-horizontal" id="verifyLinkForm" role="form" method="POST" action="">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Verify job link</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group" >
+                            <label for="linkId" class="col-md-3 control-label">Link Id</label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" id="linkId" name="linkId">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">                        
+                        <button class="btn btn-default" type="button" id="verifyJobLinkConfirmBtn">Verify</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!--/Popup modal -->
 @endsection
 
 <!--Loading page specific css-->
@@ -99,11 +127,48 @@
 <!--/-->
 
 @section('custom_script')
-    @if (isset($contacts) && !empty($contacts))
-        <script>
-            $(document).ready(function () {
-                
+    <script>
+        $(document).ready(function () {
+            //disable modal form submit
+            $('#verifyLinkForm').submit(false);
+
+            // Modal to input link id
+            $(".verifyJobLinkId").on('click', function(evt){
+                evt.preventDefault(); 
+                var jobId = $(this).data('id');
+                var redirectLink = $(this).attr('href');
+                // setting values
+                $('.modal-body').data('link', redirectLink);
+                $('.modal-body').data('jobid', jobId);
+                $('#verifyLinkId').modal('show'); 
             });
-        </script>
-    @endif
+
+            // 
+            $("#verifyJobLinkConfirmBtn").on('click', function() {
+                var redirectLink = $('.modal-body').data('link');
+                var jobId = $('.modal-body').data('jobid');
+                var linkId = document.getElementById('linkId').value;
+                verifyLink(jobId, linkId, redirectLink);                
+            });
+
+            // Verify link 
+            function verifyLink (jobId, jobLinkId, redirectLink) {
+                $.ajax({
+                        method: "POST",
+                        url: js_base_url + "/job/verify-job-link-id",
+                        data: {job_id: jobId, job_link_id: jobLinkId}
+                    })
+                    .done(function (response) {
+                        if (response.error == false) {
+                            alert(response.message);
+                            window.location.href = redirectLink;
+                        }
+                        else {
+                            alert(response.message);
+                            $(".modal-body .form-group").addClass('has-error')
+                        }
+                    });
+            }
+        });
+    </script>
 @endsection

@@ -85,7 +85,7 @@ class JobController extends Controller
      */
     public function edit($id)
     {
-
+        dd(Session::get('jobLinkId'));
         $job = $this->jobRepo->getJob($id);
         $job_id = $id;
         return view('jobs.edit')->with(['item' => $job, 'job_id' => $job_id]);
@@ -154,5 +154,14 @@ class JobController extends Controller
             Session::flash('warning', "Sorry! Error occured");
         }
         return redirect()->back();
+    }
+
+    /** 
+     * Verify job link id
+     */
+    public function verifyJobLinkId(Request $request) {
+        $linkVerificationData = $this->jobRepo->verifyJobLinkId();
+
+        return $linkVerificationData;
     }
 }

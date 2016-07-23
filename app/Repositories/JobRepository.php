@@ -175,4 +175,22 @@ class JobRepository {
             return AjaxResponse::sendResponse("Sorry! Error occured", true, 200);
         }
     }
+
+    /**
+     * Verify job link id
+     */
+    public function verifyJobLinkId() {
+        $input = $this->request->all();
+
+        $jobId = trim($input['job_id']);
+        $jobLinkId = trim($input['job_link_id']);
+
+        $job = Job::where('id', $jobId)->where('link_id', $jobLinkId)->first();
+
+        if ($job) {
+            \Session::flash('jobLinkId', $jobLinkId);
+            return AjaxResponse::sendResponse("Successfully verified job link id", false, 200);
+        }
+        return AjaxResponse::sendResponse("Sorry! Invalid job link id", true, 200);
+    }
 }
