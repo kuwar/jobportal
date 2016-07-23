@@ -84,10 +84,8 @@ class JobController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request, $id)
+    public function edit($id)
     {
-        dd($request->job);
-        dd(Session::get('jobLinkId'));
         $job = $this->jobRepo->getJob($id);
         $job_id = $id;
         return view('jobs.edit')->with(['item' => $job, 'job_id' => $job_id]);

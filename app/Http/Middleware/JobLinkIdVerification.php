@@ -21,6 +21,7 @@ class JobLinkIdVerification
             $linkId = $request->session()->get('jobLinkId');
             $job = Job::where('id', $jobId)->where('link_id', $linkId)->first();
             if ($job) {
+                $request->session()->keep(['jobLinkId']);
                 return $next($request);
             }            
         }
