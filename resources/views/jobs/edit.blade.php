@@ -34,20 +34,6 @@
                     <div class="panel-body">
                         {!! Form::model($item, [ 'method' => 'PATCH', 'route' => ['job.update', $item->id], 'role' => 'form', 'class' => 'form-horizontal' ] ) !!}
 
-                        <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                            {!! Form::label('email', 'Email*', array('class' => 'col-md-4 control-label')) !!}
-
-                            <div class="col-md-6">
-                                {!! Form::text('user[email]', old('email'), ['class' => 'form-control', 'id' => 'email']) !!}
-
-                                @if ($errors->has('email'))
-                                    <span class="help-block">
-                                            <strong>{{ $errors->first('email') }}</strong>
-                                        </span>
-                                @endif
-                            </div>
-                        </div>
-
                         <div class="form-group{{ $errors->has('title') ? ' has-error' : '' }}">
                             {!! Form::label('title', 'Job Title*', array('class' => 'col-md-4 control-label')) !!}
 

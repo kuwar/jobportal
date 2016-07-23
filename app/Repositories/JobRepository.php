@@ -86,22 +86,36 @@ class JobRepository {
     /**
      * Update job
      */
-    public function updateJob() {
+    public function updateJob($id) {
         $input = $this->request->all();
 
-        try {
-            //updating user email
-            User::where('id', $input['user_id'])
-                ->update([
-                    'email' => $input['email'],
-                ]); 
+        try { 
             //updating job
-            Job::where('id', $input['job_id'])
+            Job::where('id', $id)
                 ->update([
                     'title' => $input['title'],
                     'description' => $input['description'],
                 ]);
-            //updating skills
+            return true;
+        } 
+        catch (ModelNotFoundException $ex) {
+            return false;
+        }
+    }
+
+    /** 
+     * Update Skill
+     */
+    public function updateSkill(){
+        $input = $this->request->all();
+
+        try {
+            //updating skill
+            Skill::where('id', $input['skill_id'])
+                ->update([
+                    'title' => $input['title'],
+                ]);
+            return true;
         } 
         catch (ModelNotFoundException $ex) {
             return false;

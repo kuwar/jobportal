@@ -24,10 +24,10 @@ class JobRequest extends Request
     public function rules()
     {
         return [
-            'email' => 'required|email',
+            'email' => 'sometimes|required|email',
             'title' => 'required|max:255',
             'description' => 'required',
-            'skills.*' => 'required',
+            'skills.*' => 'sometimes|required',
         ];
     }
 }

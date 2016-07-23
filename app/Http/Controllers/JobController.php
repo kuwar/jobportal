@@ -97,13 +97,14 @@ class JobController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(ContactRequest $request, $id)
+    public function update(JobRequest $request, $id)
     {
-        $jobUpdateStatus = $this->jobRepo->updateJob();
+
+        $jobUpdateStatus = $this->jobRepo->updateJob($id);
 
         if ($jobUpdateStatus) {
             Session::flash('success', "Successfully updated job");
-            return redirect('/job');
+            return redirect()->back();
         }
         else {
             Session::flash('warning', "Something went wrong while updating job");
