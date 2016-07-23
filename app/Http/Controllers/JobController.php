@@ -18,6 +18,7 @@ class JobController extends Controller
      * Constructor function to initialize repository
      */
     public function __construct(JobRepository $jobRepository) {
+        $this->middleware('job.owner', ['only' => ['edit', 'update', 'destroy']]);
         $this->jobRepo = $jobRepository;
     }
 
@@ -83,8 +84,9 @@ class JobController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
+        dd($request->job);
         dd(Session::get('jobLinkId'));
         $job = $this->jobRepo->getJob($id);
         $job_id = $id;
