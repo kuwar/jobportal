@@ -80,7 +80,7 @@ class JobRepository {
         }
         catch(Exception $ex) {
             return false;
-        }        
+        }
     }
 
     /**
@@ -89,7 +89,7 @@ class JobRepository {
     public function updateJob($id) {
         $input = $this->request->all();
 
-        try { 
+        try {
             //updating job
             Job::where('id', $id)
                 ->update([
@@ -97,7 +97,7 @@ class JobRepository {
                     'description' => $input['description'],
                 ]);
             return true;
-        } 
+        }
         catch (ModelNotFoundException $ex) {
             return false;
         }
@@ -116,7 +116,7 @@ class JobRepository {
                     'title' => $input['title'],
                 ]);
             return true;
-        } 
+        }
         catch (ModelNotFoundException $ex) {
             return false;
         }
@@ -136,7 +136,7 @@ class JobRepository {
             return false;
         } catch (ModelNotFoundException $e) {
             return false;
-        }     
+        }
     }
 
     /** 
@@ -155,7 +155,6 @@ class JobRepository {
         }
 
         return true;
-
     }
 
     /**
@@ -174,9 +173,6 @@ class JobRepository {
             return AjaxResponse::sendResponse("Sorry! Error occured", true, 200);
         } catch (ModelNotFoundException $e) {
             return AjaxResponse::sendResponse("Sorry! Error occured", true, 200);
-        }        
+        }
     }
-
-    /**/
-
 }
