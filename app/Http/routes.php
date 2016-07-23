@@ -20,6 +20,7 @@ Route::auth();
 Route::get('/home', 'HomeController@index');
 
 #Job resource controller
+Route::get('/job/{job}/delete', 'JobController@deleteJob');
 Route::post('/job/delete-skill', 'JobController@deleteSkill');
 Route::post('/job/add-skills', 'JobController@addSkills');
 Route::post('/job/verify-job-link-id', 'JobController@verifyJobLinkId');

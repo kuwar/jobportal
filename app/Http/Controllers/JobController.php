@@ -18,7 +18,7 @@ class JobController extends Controller
      * Constructor function to initialize repository
      */
     public function __construct(JobRepository $jobRepository) {
-        $this->middleware('job.owner', ['only' => ['edit', 'update', 'destroy']]);
+        $this->middleware('job.owner', ['only' => ['edit', 'update', 'destroy', 'deleteJob']]);
         $this->jobRepo = $jobRepository;
     }
 
@@ -123,6 +123,21 @@ class JobController extends Controller
     public function destroy($id)
     {
         $jobDeleteStatus = $this->jobRepo->deleteJob($id);
+
+        if ($jobDeleteStatus) {
+            Session::flash('success', 'Successfully deleted job');
+        }
+        else {
+            Session::flash('warning', "Sorry! Error occured");
+        }
+        return redirect()->back();
+    }
+
+    /**
+     * Delete job without using destroy method
+     */
+    public function deleteJob($job) {
+        $jobDeleteStatus = $this->jobRepo->deleteJob($job);
 
         if ($jobDeleteStatus) {
             Session::flash('success', 'Successfully deleted job');

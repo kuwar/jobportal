@@ -66,15 +66,21 @@
                                                 <span class="glyphicon glyphicon-eye-open"></span>
                                             </a>
                                             &nbsp;&nbsp;
+                                            <a href="{{url('/job/'.$item->id.'/delete')}}" data-id="{{$item->id}}" class="btn btn-default verifyJobLinkId">
+                                                <span class="glyphicon glyphicon-remove"></span>
+                                            </a>
+                                            <!--
                                             {!! Form::open([
                                                 'method' => 'DELETE',
                                                 'route' => ['job.destroy', $item->id],
                                                 'style' => 'display:inline',
+                                                'id' => 'deleteJobOnConfirm',
                                                 'onSubmit' => "return confirm('Do you want to delete?');"
                                                 ])
                                             !!}
                                             <button type="submit"><span class="glyphicon glyphicon-remove"></span></button>
                                             {!! Form::close() !!}
+                                            -->
                                         </td>
                                     </tr>
                                 @endforeach
@@ -149,6 +155,12 @@
                 var jobId = $('.modal-body').data('jobid');
                 var linkId = document.getElementById('linkId').value;
                 verifyLink(jobId, linkId, redirectLink);                
+            });
+
+            // deleting job
+            $('#deleteJobOnConfirm').on('submit', function(evt){
+                evt.preventDefault();
+                alert("Hello world");
             });
 
             // Verify link 
