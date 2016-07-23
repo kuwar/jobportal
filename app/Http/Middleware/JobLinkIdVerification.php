@@ -26,7 +26,7 @@ class JobLinkIdVerification
             }            
         }
 
-        $request->session()->flash('warning', 'Not allowed to edit job. You are not owner of this job post.');
+        $request->session()->flash('warning', 'Not allowed. You are not owner of this job post.');
         return redirect('/job');
     }
 }
