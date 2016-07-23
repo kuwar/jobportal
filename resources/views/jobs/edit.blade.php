@@ -208,6 +208,7 @@
             // Deleting skills from db
             $(".deleteSkillFromDb").on("click", function (evt) {
                 var skillId = $(this).data('id');
+                var that = $(this);
 
                 //confirm to delete
                 if (confirm("Are you sure to delete this skill")) {
@@ -220,9 +221,8 @@
                     .done(function (response) {
                         if (response.error == false) {
                             //Remove deleted div
+                            that.parent().parent().remove();
                             alert(response.message);
-                            console.log($(this));
-                            $(this).parent().parent().remove();
                         }
                         else {
                             alert(response.message);
